@@ -1,0 +1,72 @@
+<head>
+    <title>testMultiTenant</title>
+</head>
+
+<body>
+
+</body>
+
+<template name="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                {{#if currentUser}}
+                    <span class="text-muted">Logged as:</span> {{currentUser.emails.[0].address}}
+                {{/if}}
+            </div>
+            <div class="col-md-6"></div>
+            <div class="col-md-3">
+                {{#if currentUser}}
+                    <a href="#" id="logout">Logout</a>
+                    {{#if isTenants}}
+                        <select name="tenant" class="" id="tenant">
+                            {{#each currentUser.profile.tenants}}
+                                <option value="{{.}}" {{tenantSelected}}>{{.}}</option>
+                            {{/each}}
+                        </select>
+                    {{/if}}
+                {{/if}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{> yield}}
+            </div>
+        </div>
+        {{#unless currentUser}}
+        <div class="row">
+            <div class="col-md-12">
+                <h5>Available users: </h5>
+                <ul>
+                    <li>test1@test.com / test1 <small>(tenant "acme")</small></li>
+                    <li>test2@test.com / test2 <small>(tenant "secret")</small></li>
+                    <li>test3@test.com / test3 <small>(tenant "acme" et "secret")</small></li>
+                </ul>
+            </div>
+        </div>
+        {{/unless}}
+    </div>
+</template>
+
+<template name="hello">
+    <div class="page-header">
+        <h1>
+            <span class="glyphicon glyphicon-cog"></span>
+            Test Multi-Tenant<br/>
+            <small class="text-muted">Multi-Tenant test with many users and databases</small>
+        </h1>
+    </div>
+
+    <p>Add new foo document:</p>
+    <input type="text" id="fooinput"/>
+    <input type="button" value="save" id="savebutton"/>
+
+    <h3>Foo documents:</h3>
+    {{#if currentUser.profile.currentTenant}}
+        <ul>
+            {{#each foos}}
+                <li>{{name}} <a href="#" class="deleteanchor">Delete</a></li>
+            {{/each}}
+        </ul>
+    {{/if}}
+</template>
